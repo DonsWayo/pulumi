@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Frequently asked questions about Nucel
+description: Frequently asked questions
 icon: HelpCircle
 ---
 
@@ -10,22 +10,9 @@ import { Callout } from 'fumadocs-ui/components/callout';
 ## General Questions
 
 <Accordions>
-<Accordion id="what-is-nucel" title="What is Nucel?">
+<Accordion id="how-much-cost" title="What are the AWS costs?">
 
-Nucel is an open-source deployment platform that makes it easy to deploy Next.js, SvelteKit, and React Router applications to AWS. It provides a Vercel-like experience while giving you full control over your infrastructure.
-
-Key features:
-- Zero configuration deployments
-- Uses your AWS account
-- Open source (no vendor lock-in)
-- Supports multiple frameworks
-- Cost-effective at scale
-
-</Accordion>
-
-<Accordion id="how-much-cost" title="How much does Nucel cost?">
-
-Nucel itself is **free and open source**. You only pay for the AWS resources you use:
+These packages are open source and free to use. You only pay for the AWS resources you use:
 
 - **Lambda**: ~$0.20 per 1M requests
 - **CloudFront**: ~$0.085 per GB transferred
@@ -39,35 +26,15 @@ Most applications cost **less than $5/month** for moderate traffic.
 <Accordion id="frameworks-supported" title="Which frameworks are supported?">
 
 Currently supported:
-- ✅ **Next.js** (14+) - Full App Router and Pages Router support
-- ✅ **SvelteKit** (2.0+) - Complete SSR/CSR capabilities
-- ✅ **React Router** (v7) - Server-side rendering support
-
-Coming soon:
-- 🔧 Remix
-- 🔧 Nuxt
-- 🔧 Astro
+- **Next.js** (14+) - Full App Router and Pages Router support
+- **SvelteKit** (2.0+) - Complete SSR/CSR capabilities
+- **React Router** (v7) - Server-side rendering support
 
 </Accordion>
 
-<Accordion id="vs-vercel" title="How is Nucel different from Vercel?">
+<Accordion id="production-ready" title="Are these packages production-ready?">
 
-| Aspect | Nucel | Vercel |
-|--------|-------|--------|
-| **Hosting** | Your AWS account | Vercel's infrastructure |
-| **Cost** | AWS usage only | Subscription + usage |
-| **Open Source** | Yes | No |
-| **Team Size** | Unlimited | Plan limits |
-| **Customization** | Full control | Platform constraints |
-| **Analytics** | CloudWatch | Built-in |
-
-Choose Nucel for full control and lower costs. Choose Vercel for a fully managed platform.
-
-</Accordion>
-
-<Accordion id="production-ready" title="Is Nucel production-ready?">
-
-Yes! Nucel is designed for production workloads with:
+Yes, these packages are designed for production workloads with:
 
 - Auto-scaling Lambda functions
 - Global CloudFront CDN
@@ -75,8 +42,6 @@ Yes! Nucel is designed for production workloads with:
 - Secure IAM roles and permissions
 - CloudWatch monitoring and logs
 - Support for high-traffic applications
-
-Several production applications are already using Nucel successfully.
 
 </Accordion>
 </Accordions>
@@ -86,9 +51,10 @@ Several production applications are already using Nucel successfully.
 <Accordions>
 <Accordion id="first-deployment" title="How do I deploy my first app?">
 
-1. Install Nucel CLI:
+1. Clone the repository and navigate to the infrastructure package:
 ```bash
-npm install -g @donswayo/nucel-cli
+git clone https://github.com/donswayo/pulu-front.git
+cd pulu-front/packages/infra
 ```
 
 2. Configure AWS credentials:
@@ -98,26 +64,26 @@ aws configure
 
 3. Deploy your app:
 ```bash
-nucel deploy
+pulumi up -s <stack>
 ```
 
-That's it! Nucel will detect your framework and deploy automatically.
+That's it! Pulumi will provision your AWS infrastructure automatically.
 
 </Accordion>
 
 <Accordion id="multiple-environments" title="How do I manage multiple environments?">
 
-Use stacks to manage different environments:
+Use Pulumi stacks to manage different environments:
 
 ```bash
-# Deploy to development (default)
-nucel deploy
+# Deploy to development
+pulumi up -s development
 
 # Deploy to staging
-nucel deploy --stack staging
+pulumi up -s staging
 
 # Deploy to production
-nucel deploy --stack production
+pulumi up -s production
 ```
 
 Each stack maintains isolated AWS resources and configuration.
@@ -126,16 +92,16 @@ Each stack maintains isolated AWS resources and configuration.
 
 <Accordion id="preview-deployments" title="How do preview deployments work?">
 
-Use the `--preview` flag to see changes before deploying:
+Use `pulumi preview` to see changes before deploying:
 
 ```bash
-nucel deploy --preview
+pulumi preview -s <stack>
 ```
 
 For branch deployments, use dynamic stack names:
 
 ```bash
-nucel deploy --stack feature-${BRANCH_NAME}
+pulumi up -s feature-${BRANCH_NAME}
 ```
 
 This creates isolated environments for each branch.
@@ -144,17 +110,19 @@ This creates isolated environments for each branch.
 
 <Accordion id="rollback" title="How do I rollback a deployment?">
 
-Nucel doesn't have built-in rollback, but you can:
+You can rollback deployments using Pulumi:
 
 1. **Redeploy previous commit**:
 ```bash
 git checkout previous-commit
-nucel deploy --stack production
+pulumi up -s production
 ```
 
-2. **Use different stack**:
+2. **Use Pulumi history**:
 ```bash
-nucel deploy --stack production-stable
+pulumi stack history
+pulumi stack select production
+pulumi up --target urn:pulumi:production::my-app::...
 ```
 
 3. **AWS Lambda versioning** (manual):
@@ -169,22 +137,23 @@ nucel deploy --stack production-stable
 ```yaml
 - name: Deploy
   run: |
-    npm install -g @donswayo/nucel-cli
-    nucel deploy --stack production --yes
+    cd packages/infra
+    pulumi up -s production --yes
   env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
+    PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 ```
 
 **GitLab CI:**
 ```yaml
 deploy:
   script:
-    - npm install -g @donswayo/nucel-cli
-    - nucel deploy --stack production --yes
+    - cd packages/infra
+    - pulumi up -s production --yes
 ```
 
-See [CI/CD Guide](/docs/deployment/cicd) for complete examples.
+For CI/CD integration examples, check the deployment documentation.
 
 </Accordion>
 </Accordions>
@@ -194,28 +163,29 @@ See [CI/CD Guide](/docs/deployment/cicd) for complete examples.
 <Accordions>
 <Accordion id="env-variables" title="How do I set environment variables?">
 
-Nucel loads environment variables from:
+Set environment variables in your Pulumi program:
 
-1. **`.env` files** (automatic):
-```bash
-.env                # Always loaded
-.env.local          # Local overrides
-.env.production     # Production only
-```
-
-2. **`nucel.config.ts`**:
+1. **`packages/infra/index.ts`**:
 ```ts
-export default {
-  env: {
+const site = new Next("my-app", {
+  environment: {
     API_URL: 'https://api.example.com',
     SECRET: process.env.SECRET
   }
-}
+});
 ```
 
-3. **CLI flags**:
+2. **Pulumi config**:
 ```bash
-nucel env set API_KEY abc123 --stack production
+pulumi config set API_URL https://api.example.com
+pulumi config set --secret SECRET abc123
+```
+
+3. **Stack-specific config files**:
+```yaml
+# Pulumi.production.yaml
+config:
+  my-app:API_URL: https://api.example.com
 ```
 
 </Accordion>
@@ -229,17 +199,19 @@ aws acm request-certificate \
   --validation-method DNS
 ```
 
-2. Add to `nucel.config.ts`:
+2. Add to `packages/infra/index.ts`:
 ```ts
-export default {
-  domain: 'app.example.com',
-  certificateArn: 'arn:aws:acm:us-east-1:...'
-}
+const site = new Next("my-app", {
+  domain: {
+    name: 'app.example.com',
+    certificateArn: 'arn:aws:acm:us-east-1:...'
+  }
+});
 ```
 
 3. Deploy:
 ```bash
-nucel deploy --stack production
+pulumi up -s production
 ```
 
 4. Update DNS to point to CloudFront distribution.
@@ -248,69 +220,65 @@ nucel deploy --stack production
 
 <Accordion id="build-command" title="How do I customize the build command?">
 
-Override the build command in `nucel.config.ts`:
+Customize the build command in your application's build scripts:
 
-```ts
-export default {
-  buildCommand: 'npm run build:custom',
-  // or for different stacks
-  stacks: {
-    production: {
-      buildCommand: 'npm run build:prod'
-    }
+```json
+// package.json
+{
+  "scripts": {
+    "build": "next build",
+    "build:prod": "next build && custom-script"
   }
 }
 ```
+
+Run the custom build before deploying with Pulumi.
 
 </Accordion>
 
 <Accordion id="aws-region" title="How do I change the AWS region?">
 
-Set the region in multiple ways:
+Set the AWS region using Pulumi config:
 
-1. **Config file**:
-```ts
-export default {
-  region: 'eu-west-1'
-}
+1. **Pulumi config**:
+```bash
+pulumi config set aws:region eu-west-1
 ```
 
-2. **Environment variable**:
-```bash
-AWS_DEFAULT_REGION=eu-west-1 nucel deploy
+2. **Stack config file**:
+```yaml
+# Pulumi.production.yaml
+config:
+  aws:region: eu-west-1
 ```
 
-3. **CLI flag**:
+3. **Environment variable**:
 ```bash
-nucel deploy --region eu-west-1
+AWS_DEFAULT_REGION=eu-west-1 pulumi up
 ```
 
 </Accordion>
 
 <Accordion id="function-config" title="How do I configure Lambda settings?">
 
-Customize Lambda settings in `nucel.config.ts`:
+Customize Lambda settings in `packages/infra/index.ts`:
 
 ```ts
-export default {
-  // Memory in MB (128-10240)
-  memorySize: 2048,
-  
-  // Timeout in seconds (1-900)
-  timeout: 30,
-  
-  // Runtime version
-  runtime: 'nodejs20.x',
-  
-  // Environment-specific
-  stacks: {
-    production: {
-      memorySize: 3008,
-      timeout: 60
-    }
+const site = new Next("my-app", {
+  lambda: {
+    // Memory in MB (128-10240)
+    memory: 2048,
+
+    // Timeout in seconds (1-900)
+    timeout: 30,
+
+    // CPU architecture
+    architecture: 'arm64'
   }
-}
+});
 ```
+
+Use Pulumi stack config for environment-specific settings.
 
 </Accordion>
 </Accordions>
@@ -336,7 +304,7 @@ export AWS_DEFAULT_REGION=us-east-1
 
 3. **Use AWS Vault**:
 ```bash
-aws-vault exec personal -- nucel deploy
+aws-vault exec personal -- pulumi up
 ```
 
 4. **Check credentials**:
@@ -368,10 +336,12 @@ npm run build
 
 4. **Memory issues**:
 ```ts
-// nucel.config.ts
-export default {
-  buildMemory: 4096 // Increase build memory
-}
+// packages/infra/index.ts
+const site = new Next("my-app", {
+  lambda: {
+    memory: 4096 // Increase Lambda memory
+  }
+});
 ```
 
 </Accordion>
@@ -380,11 +350,13 @@ export default {
 
 **Solutions:**
 
-1. **Increase timeout**:
+1. **Increase timeout in Pulumi program**:
 ```ts
-export default {
-  timeout: 60 // seconds
-}
+const site = new Next("my-app", {
+  lambda: {
+    timeout: 60 // seconds
+  }
+});
 ```
 
 2. **Optimize function size**:
@@ -394,7 +366,7 @@ export default {
 
 3. **Check CloudWatch logs**:
 ```bash
-nucel logs --stack production
+aws logs tail /aws/lambda/my-app-function --follow
 ```
 
 </Accordion>
@@ -403,19 +375,22 @@ nucel logs --stack production
 
 **Strategies:**
 
-1. **Enable warmer**:
+1. **Use provisioned concurrency**:
 ```ts
-export default {
-  warmerEnabled: true,
-  warmerSchedule: 'rate(5 minutes)'
-}
+const site = new Next("my-app", {
+  lambda: {
+    provisionedConcurrency: 5
+  }
+});
 ```
 
 2. **Increase memory** (faster CPU):
 ```ts
-export default {
-  memorySize: 2048
-}
+const site = new Next("my-app", {
+  lambda: {
+    memory: 2048
+  }
+});
 ```
 
 3. **Optimize bundle size**:
@@ -431,7 +406,7 @@ export default {
 
 1. **CloudWatch Logs**:
 ```bash
-nucel logs --tail --stack production
+aws logs tail /aws/lambda/my-app-function --follow
 ```
 
 2. **CloudWatch Metrics**:
@@ -461,15 +436,17 @@ console.log(JSON.stringify({
 <Accordions>
 <Accordion id="vpc-config" title="Can I use a VPC?">
 
-Yes, configure VPC in `nucel.config.ts`:
+Yes, configure VPC in `packages/infra/index.ts`:
 
 ```ts
-export default {
-  vpc: {
-    securityGroupIds: ['sg-xxx'],
-    subnetIds: ['subnet-xxx', 'subnet-yyy']
+const site = new Next("my-app", {
+  lambda: {
+    vpc: {
+      securityGroupIds: ['sg-xxx'],
+      subnetIds: ['subnet-xxx', 'subnet-yyy']
+    }
   }
-}
+});
 ```
 
 <Callout type="warning">
@@ -505,16 +482,16 @@ const pool = new Pool({
 
 </Accordion>
 
-<Accordion id="websockets" title="Does Nucel support WebSockets?">
+<Accordion id="websockets" title="Are WebSockets supported?">
 
-Not directly. Lambda doesn't support persistent connections. Alternatives:
+AWS Lambda doesn't support persistent connections. Alternatives:
 
 1. **AWS API Gateway WebSockets**
 2. **Pusher/Ably** (third-party)
 3. **Server-Sent Events** (one-way)
 4. **Long polling** (fallback)
 
-For real-time needs, consider a hybrid approach with Nucel for main app and separate WebSocket service.
+For real-time needs, consider a hybrid approach with a separate WebSocket service.
 
 </Accordion>
 
@@ -540,17 +517,16 @@ const url = await s3.getSignedUrl('putObject', {
 
 </Accordion>
 
-<Accordion id="contribute" title="How can I contribute to Nucel?">
+<Accordion id="contribute" title="How can I contribute?">
 
-We welcome contributions!
+Contributions are welcome!
 
 1. **Report bugs**: [GitHub Issues](https://github.com/donswayo/pulu-front/issues)
 2. **Submit PRs**: Fork and create pull requests
 3. **Documentation**: Help improve docs
 4. **Examples**: Share your use cases
-5. **Spread the word**: Star on GitHub, share on social media
 
-See [Contributing Guide](https://github.com/donswayo/pulu-front/blob/main/CONTRIBUTING.md) for details.
+See the [Contributing Guide](https://github.com/donswayo/pulu-front/blob/main/CONTRIBUTING.md) for details.
 
 </Accordion>
 </Accordions>

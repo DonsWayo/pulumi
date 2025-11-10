@@ -1,6 +1,6 @@
 ---
-title: Quick Start
-description: Getting Started with Nucel
+title: Pulumi AWS Deployment Packages
+description: Pulumi components for deploying modern web applications to AWS
 icon: Album
 ---
 
@@ -11,10 +11,9 @@ import { CpuIcon, PanelsTopLeft, Database, Terminal } from 'lucide-react';
 
 ## Introduction
 
-Nucel <span className='text-fd-muted-foreground text-sm'>(New-cel)</span> is an **open-source deployment platform** for modern web applications, designed for easy deployment without vendor lock-in,
-ensuring you maintain full ownership of your infrastructure.
+These Pulumi packages provide infrastructure as code components for deploying Next.js, SvelteKit, and React Router applications to AWS. They handle the provisioning and configuration of AWS resources needed to run modern web applications at scale.
 
-Nucel has different parts:
+The packages include:
 
 <Cards>
 
@@ -36,72 +35,68 @@ Custom adapters for each framework ensuring optimal performance and feature comp
 
 </Card>
 
-<Card icon={<Terminal />} title='Nucel CLI'>
+<Card icon={<Terminal />} title='Pulumi Infrastructure'>
 
-A command line tool to deploy applications with a single command, handling all infrastructure complexity.
+Use Pulumi to deploy applications programmatically with type-safe infrastructure as code.
 
 </Card>
 
 </Cards>
 
-<Callout title="Want to learn more?">
-  Read our in-depth [What is Nucel](/docs/what-is-nucel) introduction.
-</Callout>
-
 ### Terminology
 
-**Infrastructure as Code (IaC):** Define and manage your infrastructure using code instead of manual processes. Nucel uses Pulumi for IaC with zero configuration required.
+**Infrastructure as Code (IaC):** Define and manage your infrastructure using code instead of manual processes. These packages use Pulumi for IaC.
 
 **Stacks:** Isolated deployment environments (development, staging, production) with independent resources and configurations.
 
-## Automatic Installation
+## Installation & Setup
 
-A minimum version of Node.js 22 is required.
+A minimum version of Node.js 18+ is required (Node.js 22+ recommended).
+
+1. Install Pulumi CLI:
+
+```bash tab="brew"
+brew install pulumi
+```
 
 ```bash tab="npm"
-npm install -g @donswayo/nucel-cli
+npm install -g @pulumi/pulumi
 ```
 
-```bash tab="pnpm"
-pnpm add -g @donswayo/nucel-cli
+2. Configure AWS credentials:
+
+```bash
+aws configure
+# or export AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
 ```
 
-```bash tab="yarn"
-yarn global add @donswayo/nucel-cli
-```
+3. Install a deployment package:
 
-```bash tab="bun"
-bun add -g @donswayo/nucel-cli
+```bash
+# For Next.js
+pnpm add -D @donswayo/pulumi-nextjs-aws
+
+# For SvelteKit
+pnpm add -D @donswayo/pulumi-sveltekit-aws
+
+# For React Router
+pnpm add -D @donswayo/pulumi-react-router-aws
 ```
 
 ### Your First Deployment
 
-Deploy your application with a single command:
+Create a Pulumi program and deploy:
 
-```bash
-# In your project directory
-nucel deploy
-```
-
-Nucel will:
-- Detect your framework automatically
+Pulumi will:
+- Detect your infrastructure requirements
 - Build your application
 - Provision AWS infrastructure
 - Deploy to a CloudFront URL
-
-<Callout title='From Existing Codebase?'>
-
-    Nucel works with existing Next.js, SvelteKit, and React Router projects. Just run `nucel deploy` in your project directory.
-
-</Callout>
-
-### Enjoy!
 
 Your application is now live on AWS with:
 - Global CDN distribution
 - Auto-scaling serverless functions
 - Enterprise-grade infrastructure
-- Zero configuration required
 
 Visit your CloudFront URL to see your deployed application.
 
@@ -109,75 +104,7 @@ Visit your CloudFront URL to see your deployed application.
 https://[your-distribution].cloudfront.net
 ```
 
-## FAQ
-
-Common questions you may encounter.
-
-<Accordions>
-    <Accordion id='change-stack' title="How to deploy to different environments?">
-        You can deploy to different stacks (environments) using the `--stack` flag:
-
-        ```bash
-        # Deploy to development (default)
-        nucel deploy
-
-        # Deploy to production
-        nucel deploy --stack production
-
-        # Deploy to custom environment
-        nucel deploy --stack feature-branch
-        ```
-
-        Each stack maintains its own isolated AWS resources and configuration.
-    </Accordion>
-    <Accordion id='custom-domain' title="How to use a custom domain?">
-        Add your custom domain in the `nucel.config.ts` file:
-
-        ```ts title="nucel.config.ts"
-        export default {
-          domain: 'app.example.com',
-          certificateArn: 'arn:aws:acm:us-east-1:...'
-        }
-        ```
-
-        The certificate must be in us-east-1 region for CloudFront.
-    </Accordion>
-    <Accordion id='environment-variables' title='How are environment variables handled?'>
-        Nucel automatically loads environment variables from `.env` files:
-
-        - `.env` - Always loaded
-        - `.env.local` - Local overrides (git ignored)
-        - `.env.[stack]` - Stack-specific variables
-        - `.env.[stack].local` - Stack-specific local overrides
-
-        Framework-specific public prefixes are automatically handled:
-        - Next.js: `NEXT_PUBLIC_*`
-        - SvelteKit: `PUBLIC_*`
-        - React Router: `VITE_*`
-    </Accordion>
-    <Accordion id='costs' title="What are the AWS costs?">
-        You only pay for AWS usage:
-        - Lambda: $0.20 per 1M requests
-        - CloudFront: $0.085 per GB transferred
-        - S3: $0.023 per GB stored
-        - No Nucel subscription fees
-
-        Most applications cost less than $5/month for moderate traffic.
-    </Accordion>
-    <Accordion id='preview-deployments' title="How to preview changes before deploying?">
-        Use the `--preview` flag to see what changes will be made:
-
-        ```bash
-        nucel deploy --preview
-        ```
-
-        This shows a detailed diff of infrastructure changes without applying them.
-    </Accordion>
-</Accordions>
-
 ## Learn More
-
-New to Nucel? Don't worry, we're here to help.
 
 If you find anything confusing, please open an issue on [GitHub](https://github.com/donswayo/pulu-front/issues).
 
@@ -206,23 +133,18 @@ For building applications, check out the framework guides:
 
 <Cards>
   <Card
-    href="/docs/deployment/production"
-    title="Production Best Practices"
-    description="Security, monitoring, and optimization tips"
-  />
-  <Card
-    href="/docs/deployment/cicd"
-    title="CI/CD Integration"
-    description="Deploy from GitHub Actions and GitLab CI"
-  />
-  <Card
-    href="/docs/deployment/monitoring"
-    title="Monitoring"
-    description="CloudWatch logs, metrics, and alerting"
+    href="/docs/deployment"
+    title="Deployment Guide"
+    description="Learn about deploying your applications"
   />
   <Card
     href="/docs/troubleshooting"
     title="Troubleshooting"
     description="Common issues and solutions"
+  />
+  <Card
+    href="/docs/configuration"
+    title="Configuration"
+    description="Customize your deployment settings"
   />
 </Cards>
