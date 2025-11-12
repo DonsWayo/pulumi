@@ -1,60 +1,59 @@
-# Nucel
+# Pulumi AWS Deployment Packages
 
-> **⚠️ Repository Moved**
->
-> This repository has been moved to [nucel-cloud/nucel](https://github.com/nucel-cloud/nucel).
-> The old repository at [DonsWayo/nucel](https://github.com/DonsWayo/nucel) is archived.
->
-> Please update your bookmarks and any references to point to the new location.
-Deploy modern web applications without vendor lock-in. Own your infrastructure. Pay only for what you use.
+Pulumi components for deploying modern web applications to AWS. These packages provide infrastructure as code for Next.js, SvelteKit, and React Router applications.
 
 ## Installation
 
+Clone this repository and install dependencies:
+
 ```bash
-npm install -g @donswayo/nucel-cli
+git clone https://github.com/donswayo/pulumi
+cd pulumi
+pnpm install
 ```
 
 ## Usage
 
+Deploy your applications using Pulumi:
+
 ```bash
-# Deploy your app (auto-detects framework)
-nucel deploy
+cd packages/infra
 
-# Deploy to production
-nucel deploy --stack production
+# Deploy Next.js app to AWS
+pulumi up -s web
 
-# Preview changes
-nucel deploy --preview
+# Deploy SvelteKit app to AWS
+pulumi up -s sveltekit
+
+# Deploy React Router app to AWS
+pulumi up -s react-router
+
+# Preview changes before deploying
+pulumi preview -s <stack-name>
+
+# Destroy infrastructure
+pulumi destroy -s <stack-name>
 ```
 
-## Supported Frameworks
+## Features
 
 - **Next.js 14+** - App Router, Pages Router, ISR, Streaming SSR
-- **SvelteKit 2+** - SSR, Form Actions, Adapters
-- **React Router v7** - Full Remix features, Loaders, Actions
-
-## Why Nucel?
-
-- **Full Ownership** - Runs in YOUR cloud account
-- **Zero Platform Fees** - Only pay cloud costs (~$5/month)
-- **No Vendor Lock-in** - Open source, portable
-- **Unlimited Everything** - No limits on builds, bandwidth, or team members
-- **Multi-Cloud Ready** - AWS today, GCP/Azure/Cloudflare coming
+- **SvelteKit 2+** - SSR, Form Actions, API Routes
+- **React Router v7** - Server-side rendering with loaders and actions
+- **AWS Infrastructure** - CloudFront CDN, Lambda functions, S3 storage, DynamoDB
+- **Type-safe** - Full TypeScript support with Pulumi
 
 ## Documentation
 
-Full docs at: https://nucel.cloud (coming soon)
-
-For now: [./apps/docs](./apps/docs)
+See [./apps/docs](./apps/docs) for complete documentation.
 
 ## Packages
 
 | Package | Description |
 |---------|-------------|
-| [@donswayo/nucel-cli](https://www.npmjs.com/package/@donswayo/nucel-cli) | CLI for deployments |
-| [@donswayo/pulumi-nextjs-aws](https://www.npmjs.com/package/@donswayo/pulumi-nextjs-aws) | Next.js adapter |
-| [@donswayo/pulumi-sveltekit-aws](https://www.npmjs.com/package/@donswayo/pulumi-sveltekit-aws) | SvelteKit adapter |
-| [@donswayo/pulumi-react-router-aws](https://www.npmjs.com/package/@donswayo/pulumi-react-router-aws) | React Router v7 adapter |
+| [@donswayo/pulumi-nextjs-aws](https://www.npmjs.com/package/@donswayo/pulumi-nextjs-aws) | Next.js Pulumi component |
+| [@donswayo/pulumi-sveltekit-aws](https://www.npmjs.com/package/@donswayo/pulumi-sveltekit-aws) | SvelteKit Pulumi component |
+| [@donswayo/pulumi-react-router-aws](https://www.npmjs.com/package/@donswayo/pulumi-react-router-aws) | React Router v7 Pulumi component |
 
 ## License
 

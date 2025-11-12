@@ -1,51 +1,37 @@
 ---
-title: Platform Overview
-description: Comprehensive guide to the Pulumi AWS deployment platform for modern web frameworks
+title: Architecture Overview
+description: Technical architecture of the Pulumi AWS deployment components
 ---
 
 import { Cards, Card } from 'fumadocs-ui/components/card';
 
-# Platform Overview
+# Architecture Overview
 
-## What We're Building
+## Overview
 
-This platform provides enterprise-grade deployment infrastructure for modern web applications on AWS. It combines the simplicity of Platform-as-a-Service (PaaS) solutions with the flexibility and cost-effectiveness of Infrastructure-as-Code (IaC).
+These Pulumi packages provide reusable infrastructure components for deploying modern web applications on AWS. They automate the provisioning of Lambda, CloudFront, S3, and other AWS services needed for serverless web application hosting.
 
-## The Problem We Solve
+## Architecture
 
-### For Developers
-- **Complex AWS Setup**: Setting up Lambda, CloudFront, S3, and other services manually is time-consuming and error-prone
-- **Framework Differences**: Each framework (Next.js, SvelteKit, React Router) has unique deployment requirements
-- **Configuration Management**: Managing environment variables, domains, and infrastructure settings across environments
-- **Lack of Standards**: No consistent deployment approach across different projects
-
-### For Organizations
-- **Vendor Lock-in**: Platforms like Vercel and Netlify control your infrastructure
-- **Rising Costs**: PaaS solutions become expensive at scale
-- **Limited Control**: Cannot customize infrastructure for specific requirements
-- **Compliance Issues**: Data residency and security requirements may conflict with third-party platforms
-
-## Our Solution
-
-### 1. **Unified Deployment Platform**
-Deploy any modern web framework to AWS with a single, consistent approach:
+### Unified Deployment Components
+Deploy any supported web framework to AWS with consistent, reusable infrastructure patterns:
 - Next.js with full App Router and ISR support
 - SvelteKit with SSR and static site generation
-- React Router v7 (Remix) with streaming and data loading
+- React Router v7 with streaming and data loading
 
-### 2. **Infrastructure as Code**
-Built on Pulumi, providing:
+### Infrastructure as Code
+Built on Pulumi for infrastructure management:
 - Version-controlled infrastructure
 - Reproducible deployments
 - Rollback capabilities
 - Infrastructure testing
 
-### 3. **Cost Optimization**
-Serverless architecture that scales to zero:
+### Serverless Architecture
+AWS serverless services that scale automatically:
 - Pay only for actual usage
 - No idle server costs
-- Automatic scaling
-- Typical cost: $10-40/month for most applications
+- Automatic scaling based on traffic
+- Global edge distribution
 
 ## Key Components
 
@@ -66,11 +52,10 @@ Serverless architecture that scales to zero:
 @donswayo/
 ├── pulumi-nextjs-aws/      # Next.js deployment
 ├── pulumi-sveltekit-aws/   # SvelteKit deployment
-├── pulumi-react-router-aws/ # React Router deployment
-└── nucel/                   # CLI tool
+└── pulumi-react-router-aws/ # React Router deployment
 ```
 
-## How It Works
+## Deployment Process
 
 ### 1. Build Phase
 Each framework has a custom adapter that:
@@ -87,147 +72,70 @@ Pulumi provisions AWS resources:
 - Sets up monitoring and logging
 
 ### 3. Deployment Phase
-The platform:
-- Uploads static assets to S3
-- Deploys Lambda functions
-- Invalidates CloudFront cache
-- Returns your application URL
+The components:
+- Upload static assets to S3
+- Deploy Lambda functions
+- Invalidate CloudFront cache
+- Output application URL
 
-## Benefits
+## Key Features
 
-### For Development Teams
-
-#### **Faster Time to Market**
-- Deploy in minutes, not days
-- No infrastructure expertise required
-- Focus on building features
-
-#### **Developer Experience**
-- Familiar tools and workflows
-- Local development unchanged
-- Git-based deployments
-
-#### **Full Control**
+### Infrastructure Management
 - Customize any aspect of infrastructure
+- Version control all infrastructure changes
 - Debug with CloudWatch logs
-- Direct AWS access when needed
+- Direct AWS resource access
 
-### For Business Stakeholders
-
-#### **Cost Predictability**
-- Pay-per-use pricing model
-- No minimum commitments
-- Detailed cost breakdowns
-- 10-100x cheaper than traditional hosting
-
-#### **Scalability**
+### Scalability
 - Handle traffic spikes automatically
 - Global performance with CloudFront
-- No capacity planning needed
+- Automatic capacity management
 
-#### **Security & Compliance**
-- Your AWS account = your data
-- IAM-based security
+### Security
+- Deployed to your AWS account
+- IAM-based security controls
 - VPC and private networking options
-- SOC2, HIPAA, PCI compliance possible
-
-## Use Cases
-
-### 1. **Startup MVP**
-Quick deployment with minimal cost:
-- Free tier eligible
-- Scale as you grow
-- No upfront investment
-
-### 2. **Enterprise Applications**
-Production-grade infrastructure:
-- Multi-environment support
-- Custom domain management
-- Advanced monitoring
-
-### 3. **E-commerce Platforms**
-High-performance requirements:
-- Global CDN distribution
-- Auto-scaling for sales events
-- Image optimization (Next.js)
-
-### 4. **SaaS Applications**
-Multi-tenant deployments:
-- Environment isolation
-- Per-customer configurations
-- API rate limiting
-
-### 5. **Marketing Sites**
-SEO and performance focused:
-- Server-side rendering
-- Static generation
-- Edge caching
+- Compliance-ready infrastructure
 
 ## Technology Stack
 
-### Frontend Frameworks
+### Supported Frameworks
 - **Next.js 14+**: React framework with ISR, App Router
 - **SvelteKit 2+**: Svelte framework with SSR/SSG
 - **React Router v7**: Modern routing with SSR
 
-### Infrastructure
-- **AWS Lambda**: Serverless compute
+### AWS Infrastructure
+- **AWS Lambda**: Serverless compute with ARM64 support
 - **CloudFront**: CDN and edge network
-- **S3**: Object storage
-- **DynamoDB**: NoSQL database
+- **S3**: Object storage for static assets
+- **DynamoDB**: NoSQL database for ISR cache
 - **IAM**: Security and access control
 
 ### Development Tools
-- **Pulumi**: Infrastructure as Code
+- **Pulumi**: Infrastructure as Code engine
 - **TypeScript**: Type-safe configuration
-- **pnpm**: Package management
-- **GitHub Actions**: CI/CD automation
-
-## Comparison Matrix
-
-| Feature | Our Platform | Vercel | Netlify | AWS Amplify |
-|---------|-------------|--------|---------|-------------|
-| **Open Source** | ✅ Yes | ❌ No | ❌ No | ❌ No |
-| **Self-Hosted** | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
-| **Custom Domains** | ✅ Unlimited | Limited | Limited | ✅ Unlimited |
-| **Build Minutes** | ✅ Unlimited | Limited | Limited | Limited |
-| **Team Size** | ✅ Unlimited | Paid | Paid | ✅ Unlimited |
-| **Framework Support** | 3 Major | Many | Many | Limited |
-| **Infrastructure Control** | ✅ Full | ❌ None | ❌ None | Partial |
-| **Pricing Model** | Usage only | Subscription | Subscription | Usage only |
-| **Vendor Lock-in** | ❌ None | ✅ High | ✅ High | Medium |
-
-## Success Stories
-
-### Case Study: E-commerce Platform
-- **Challenge**: High hosting costs on Vercel ($500/month)
-- **Solution**: Migrated to our platform
-- **Result**: 90% cost reduction ($50/month), better performance
-
-### Case Study: SaaS Startup
-- **Challenge**: Need for custom infrastructure
-- **Solution**: Deployed with custom Lambda configurations
-- **Result**: Full control while maintaining simplicity
+- **OpenNext**: Next.js adapter for AWS
+- **Framework-specific adapters**: Custom build adapters for each framework
 
 ## Getting Started
 
-Ready to deploy your first application? Choose your path:
+Ready to deploy your first application?
 
 <Cards>
-  <Card 
-    title="Quick Start Guide" 
-    href="/docs/quickstart"
+  <Card
+    title="Quick Start Guide"
+    href="/docs/getting-started/quickstart"
     description="Deploy your first app in 5 minutes"
   />
-  <Card 
-    title="Architecture Deep Dive" 
-    href="/docs/architecture"
-    description="Understand how everything works"
+  <Card
+    title="Configuration Options"
+    href="/docs/configuration"
+    description="Customize your deployment"
   />
-  <Card 
-    title="Migration Guide" 
-    href="/docs/migration"
-    description="Move from Vercel/Netlify"
+  <Card
+    title="Framework Guides"
+    href="/docs/frameworks"
+    description="Framework-specific documentation"
   />
 </Cards>
 
@@ -236,27 +144,6 @@ Ready to deploy your first application? Choose your path:
 - **GitHub**: [github.com/donswayo/pulu-front](https://github.com/donswayo/pulu-front)
 - **Issues**: Report bugs and request features
 - **Discussions**: Ask questions and share experiences
-- **Contributing**: PRs welcome!
-
-## Roadmap
-
-### Q4 2024
-- ✅ Next.js support
-- ✅ SvelteKit support  
-- ✅ React Router support
-- ✅ CLI tool (Nucel)
-
-### Q1 2025
-- 🚧 Edge functions support
-- 🚧 Database integrations
-- 🚧 Monitoring dashboard
-- 🚧 GitHub/GitLab integrations
-
-### Q2 2025
-- 📋 Astro support
-- 📋 Nuxt support
-- 📋 Qwik support
-- 📋 Multi-region deployments
 
 ## License
 

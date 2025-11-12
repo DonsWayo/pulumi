@@ -30,7 +30,7 @@ export default {
     return paths;
   },
   async buildEnd({ buildManifest }) {
-    console.log('Running Nucel adapter...');
+    console.log('Running AWS adapter...');
     await adapter.build({
       serverBuildFile: 'build/server/index.js',
       buildDirectory: 'build/client',

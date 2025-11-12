@@ -1,38 +1,38 @@
 ---
 title: Configuration
-description: Complete configuration reference for Nucel deployments
+description: Complete configuration reference for Pulumi AWS deployments
 icon: SettingsIcon
 ---
 
 import { Cards, Card } from 'fumadocs-ui/components/card';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Comprehensive configuration options for customizing your Nucel deployments.
+Comprehensive configuration options for customizing your AWS deployments.
 
 ## Configuration Overview
 
-Nucel provides extensive configuration options to customize every aspect of your deployment. From Lambda settings to CloudFront behaviors, you have full control over your infrastructure.
+These Pulumi packages provide extensive configuration options to customize every aspect of your deployment. From Lambda settings to CloudFront behaviors, you have full control over your infrastructure.
 
 <Cards>
-  <Card 
-    title="Basic Configuration" 
-    href="/docs/configuration/basic"
-    description="Essential settings for all deployments"
+  <Card
+    title="API Reference"
+    href="/docs/configuration/api"
+    description="Complete configuration API documentation"
   />
-  <Card 
-    title="Lambda Configuration" 
-    href="/docs/configuration/lambda"
-    description="Memory, timeout, and runtime settings"
+  <Card
+    title="Getting Started"
+    href="/docs/getting-started"
+    description="Learn the basics"
   />
-  <Card 
-    title="CloudFront Configuration" 
-    href="/docs/configuration/cloudfront"
-    description="CDN behaviors and cache policies"
+  <Card
+    title="Architecture"
+    href="/docs/getting-started/architecture"
+    description="Understanding the infrastructure"
   />
-  <Card 
-    title="Environment Variables" 
-    href="/docs/configuration/environment"
-    description="Managing secrets and configuration"
+  <Card
+    title="Frameworks"
+    href="/docs/frameworks"
+    description="Framework-specific guides"
   />
 </Cards>
 
@@ -96,35 +96,30 @@ config:
     timeout: 30
 ```
 
-### Nucel Configuration
+### Pulumi Program Configuration
 
-```typescript title="nucel.config.ts"
-import { defineConfig } from "@donswayo/nucel-cli";
+```typescript title="packages/infra/index.ts"
+import * as pulumi from "@pulumi/pulumi";
+import { Next } from "@donswayo/pulumi-nextjs-aws";
 
-export default defineConfig({
-  framework: "nextjs",
-  
-  build: {
-    command: "pnpm build",
-    outputDir: ".open-next",
+const config = new pulumi.Config();
+
+const site = new Next("my-app", {
+  appPath: "../../apps/web",
+  openNextPath: "../../apps/web/.open-next",
+
+  environment: {
+    NODE_ENV: config.get("nodeEnv") || "production",
   },
-  
-  deploy: {
-    region: "us-east-1",
-    stackPrefix: "my-app",
-    
-    stacks: {
-      production: {
-        environment: {
-          NODE_ENV: "production",
-        },
-        lambda: {
-          memory: 2048,
-        },
-      },
-    },
+
+  lambda: {
+    memory: config.getNumber("lambdaMemory") || 2048,
+    timeout: config.getNumber("lambdaTimeout") || 30,
+    architecture: "arm64",
   },
 });
+
+export const url = site.url;
 ```
 
 ## Configuration by Framework
@@ -332,25 +327,25 @@ const config = configSchema.parse(rawConfig);
 
 ```bash
 # Preview changes before applying
-nucel deploy --preview
+pulumi preview -s <stack>
 ```
 
 ## What's Next?
 
 <Cards>
-  <Card 
-    title="Basic Configuration" 
-    href="/docs/configuration/basic"
-    description="Start with essential settings"
-  />
-  <Card 
-    title="Framework Config" 
-    href="/docs/configuration/frameworks"
-    description="Framework-specific options"
-  />
-  <Card 
-    title="API Reference" 
+  <Card
+    title="API Reference"
     href="/docs/configuration/api"
     description="Complete configuration API"
+  />
+  <Card
+    title="Quick Start"
+    href="/docs/getting-started/quickstart"
+    description="Deploy your first app"
+  />
+  <Card
+    title="Deployment Guide"
+    href="/docs/deployment"
+    description="Learn about deployment"
   />
 </Cards>

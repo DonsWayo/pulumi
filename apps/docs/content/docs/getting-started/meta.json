@@ -2,10 +2,9 @@
   "title": "Getting Started",
   "pages": [
     "index",
-    "prerequisites", 
+    "prerequisites",
     "quickstart",
-    "concepts",
-    "first-deployment",
-    "migration"
+    "overview",
+    "architecture"
   ]
 }
