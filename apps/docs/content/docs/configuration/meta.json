@@ -2,11 +2,6 @@
   "title": "Configuration",
   "pages": [
     "index",
-    "basic",
-    "lambda",
-    "cloudfront",
-    "environment",
-    "domains",
     "api"
   ]
 }

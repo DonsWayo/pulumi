@@ -1,45 +1,45 @@
 ---
 title: Deployment
-description: Deploy and manage your applications in production with Nucel
+description: Deploy and manage your applications in production on AWS
 icon: CloudIcon
 ---
 
 import { Cards, Card } from 'fumadocs-ui/components/card';
 import { Callout } from 'fumadocs-ui/components/callout';
 
-Everything you need to know about deploying and managing applications in production with Nucel.
+Everything you need to know about deploying and managing applications in production on AWS.
 
 ## Deployment Overview
 
-Nucel provides enterprise-grade deployment capabilities with automatic scaling, global distribution, and comprehensive monitoring. Deploy with confidence using battle-tested AWS infrastructure.
+These Pulumi packages provide enterprise-grade deployment capabilities with automatic scaling, global distribution, and comprehensive monitoring. Deploy with confidence using AWS infrastructure.
 
 <Cards>
-  <Card 
-    title="AWS Setup" 
-    href="/docs/deployment/aws-setup"
-    description="Configure AWS credentials and permissions"
+  <Card
+    title="Getting Started"
+    href="/docs/getting-started/quickstart"
+    description="Deploy your first application"
   />
-  <Card 
-    title="Production Deployment" 
-    href="/docs/deployment/production"
-    description="Best practices for production deployments"
+  <Card
+    title="Configuration"
+    href="/docs/configuration"
+    description="Customize your deployment settings"
   />
-  <Card 
-    title="CI/CD Integration" 
-    href="/docs/deployment/ci-cd"
-    description="Automate deployments with GitHub Actions and GitLab"
+  <Card
+    title="Architecture"
+    href="/docs/getting-started/architecture"
+    description="Understanding the infrastructure"
   />
-  <Card 
-    title="Monitoring" 
-    href="/docs/deployment/monitoring"
-    description="Track performance and debug issues"
+  <Card
+    title="Troubleshooting"
+    href="/docs/troubleshooting"
+    description="Common issues and solutions"
   />
 </Cards>
 
 ## Deployment Workflow
 
 <Callout type="info">
-  Our deployment process is designed to be simple yet powerful, giving you full control while abstracting complexity.
+  The deployment process is designed to be simple yet powerful, giving you full control while abstracting complexity.
 </Callout>
 
 ### 1. **Build Phase**
@@ -67,25 +67,25 @@ Your application is deployed globally:
 
 ## Key Features
 
-### 🚀 **Zero-Downtime Deployments**
+### Zero-Downtime Deployments
 - Blue-green deployment strategy
 - Automatic rollback on failures
 - Health checks before switching
 - CloudFront cache invalidation
 
-### 🌍 **Global Distribution**
+### Global Distribution
 - 450+ CloudFront edge locations
 - Automatic geo-routing
 - Regional failover support
 - Optimized for all continents
 
-### 📊 **Comprehensive Monitoring**
+### Comprehensive Monitoring
 - Real-time CloudWatch metrics
 - Custom dashboards
 - Error tracking and alerts
 - Performance analytics
 
-### 🔒 **Enterprise Security**
+### Enterprise Security
 - AWS WAF integration
 - DDoS protection with Shield
 - SSL/TLS encryption
@@ -96,7 +96,7 @@ Your application is deployed globally:
 ### Development Deployment
 Quick iterations with instant feedback:
 ```bash
-nucel deploy --stack dev
+pulumi up -s dev
 ```
 - Fast deployments
 - Verbose logging
@@ -106,7 +106,7 @@ nucel deploy --stack dev
 ### Staging Deployment
 Production-like environment for testing:
 ```bash
-nucel deploy --stack staging
+pulumi up -s staging
 ```
 - Production configuration
 - Performance testing
@@ -116,8 +116,8 @@ nucel deploy --stack staging
 ### Production Deployment
 Optimized for reliability and performance:
 ```bash
-nucel deploy --stack production --preview
-nucel deploy --stack production
+pulumi preview -s production
+pulumi up -s production
 ```
 - High availability
 - Auto-scaling
@@ -228,24 +228,19 @@ Common deployment issues and solutions:
 ## What's Next?
 
 <Cards>
-  <Card 
-    title="Configure AWS" 
-    href="/docs/deployment/aws-setup"
-    description="Set up your AWS account"
+  <Card
+    title="Quick Start Guide"
+    href="/docs/getting-started/quickstart"
+    description="Deploy your first app"
   />
-  <Card 
-    title="Deploy to Production" 
-    href="/docs/deployment/production"
-    description="Launch your application"
+  <Card
+    title="Configuration Options"
+    href="/docs/configuration"
+    description="Customize your setup"
   />
-  <Card 
-    title="Set Up Monitoring" 
-    href="/docs/deployment/monitoring"
-    description="Track your application"
-  />
-  <Card 
-    title="Automate with CI/CD" 
-    href="/docs/deployment/ci-cd"
-    description="Continuous deployment"
+  <Card
+    title="Troubleshooting"
+    href="/docs/troubleshooting"
+    description="Get help with issues"
   />
 </Cards>

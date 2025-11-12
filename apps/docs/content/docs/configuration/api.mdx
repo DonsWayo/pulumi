@@ -498,106 +498,80 @@ const app = new ReactRouterAwsDeployment("react-router-app", {
 });
 ```
 
-## Nucel CLI Configuration
+## Pulumi Program Configuration
 
-### nucel.config.ts
+### Infrastructure as Code
 
-```typescript
-import { defineConfig } from "@donswayo/nucel-cli";
+All deployment configuration is managed through Pulumi programs in `packages/infra/index.ts`. This provides type-safe infrastructure configuration with full programmatic control.
 
-export default defineConfig({
-  // Framework override (auto-detected by default)
-  framework: "nextjs", // "nextjs" | "sveltekit" | "react-router"
-  
-  // Build configuration
-  build: {
-    // Custom build command
-    command: "pnpm build:custom",
-    
-    // Build output directory
-    outputDir: ".custom-build",
-    
-    // Environment variables for build
-    env: {
-      CUSTOM_BUILD_FLAG: "true",
-    },
-  },
-  
-  // Deployment configuration
-  deploy: {
-    // AWS region
-    region: "us-east-1",
-    
-    // Stack name prefix
-    stackPrefix: "my-app",
-    
-    // Environment variables
-    environment: {
-      NODE_ENV: "production",
-    },
-    
-    // Lambda configuration
-    lambda: {
-      memory: 1024,
-      timeout: 30,
-      architecture: "arm64",
-    },
-    
-    // Domain configuration
-    domain: {
-      name: "app.example.com",
-      certificateArn: "arn:aws:acm:us-east-1:...",
-    },
-  },
-  
-  // Preview configuration
-  preview: {
-    // Enable verbose output
-    verbose: true,
-    
-    // Diff format
-    diffFormat: "table", // "table" | "json" | "yaml"
-  },
-  
-  // Hooks
-  hooks: {
-    // Before build
-    preBuild: async () => {
-      console.log("Starting build...");
-    },
-    
-    // After build
-    postBuild: async () => {
-      console.log("Build completed!");
-    },
-    
-    // Before deploy
-    preDeploy: async () => {
-      console.log("Starting deployment...");
-    },
-    
-    // After deploy
-    postDeploy: async (outputs) => {
-      console.log("Deployed to:", outputs.url);
-    },
-  },
+```typescript title="packages/infra/index.ts"
+import * as pulumi from "@pulumi/pulumi";
+import * as aws from "@pulumi/aws";
+import { Next } from "@donswayo/pulumi-nextjs-aws";
+
+const config = new pulumi.Config();
+
+// Create AWS provider with specific region
+const provider = new aws.Provider("aws", {
+  region: config.get("region") || "us-east-1",
 });
+
+// Deploy Next.js application
+const site = new Next("my-app", {
+  appPath: "../../apps/web",
+  openNextPath: "../../apps/web/.open-next",
+
+  // Environment variables
+  environment: {
+    NODE_ENV: config.get("nodeEnv") || "production",
+    API_URL: config.get("apiUrl") || "",
+  },
+
+  // Lambda configuration
+  lambda: {
+    memory: config.getNumber("lambdaMemory") || 1024,
+    timeout: config.getNumber("lambdaTimeout") || 30,
+    architecture: "arm64",
+  },
+
+  // Domain configuration
+  domain: config.getObject("domain") ? {
+    name: config.require("domain.name"),
+    certificateArn: config.get("domain.certificateArn"),
+  } : undefined,
+}, { provider });
+
+// Export stack outputs
+export const url = site.url;
+export const distributionId = site.distributionId;
 ```
 
-### Environment Files
+### Stack Configuration Files
 
-```bash
-# .env.development
-NODE_ENV=development
-API_URL=http://localhost:3001
+```yaml
+# Pulumi.development.yaml
+config:
+  aws:region: us-east-1
+  my-app:nodeEnv: development
+  my-app:apiUrl: http://localhost:3001
+  my-app:lambdaMemory: 512
 
-# .env.staging
-NODE_ENV=staging
-API_URL=https://staging-api.example.com
+# Pulumi.staging.yaml
+config:
+  aws:region: us-east-1
+  my-app:nodeEnv: staging
+  my-app:apiUrl: https://staging-api.example.com
+  my-app:lambdaMemory: 1024
 
-# .env.production
-NODE_ENV=production
-API_URL=https://api.example.com
+# Pulumi.production.yaml
+config:
+  aws:region: us-east-1
+  my-app:nodeEnv: production
+  my-app:apiUrl: https://api.example.com
+  my-app:lambdaMemory: 2048
+  my-app:domain:
+    name: app.example.com
+    certificateArn: arn:aws:acm:us-east-1:...
 ```
 
 ## Pulumi Configuration

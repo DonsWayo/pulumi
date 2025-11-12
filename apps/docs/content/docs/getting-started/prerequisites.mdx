@@ -143,7 +143,7 @@ aws iam attach-user-policy --user-name pulumi-deployer \
 ```
 
 <Callout type="warning">
-For production, use more restrictive policies. See our [AWS Setup Guide](/docs/getting-started/aws-setup) for detailed IAM policies.
+For production, use more restrictive policies tailored to your specific needs.
 </Callout>
 
 </Step>
@@ -447,9 +447,9 @@ async function verifySetup() {
   }
 
   console.log('\n📚 Next Steps:');
-  console.log('1. Set up Pulumi: /docs/getting-started/pulumi-setup');
-  console.log('2. Configure AWS: /docs/getting-started/aws-setup');
-  console.log('3. Quick Start: /docs/getting-started/quick-start');
+  console.log('1. Review architecture: /docs/getting-started/architecture');
+  console.log('2. Quick Start: /docs/getting-started/quickstart');
+  console.log('3. Deploy your app: /docs/deployment');
 }
 
 verifySetup().catch(console.error);
@@ -476,6 +476,6 @@ npx tsx verify-setup.ts
 
 Ready to proceed? Continue with:
 
-1. [Pulumi Setup](/docs/getting-started/pulumi-setup) - Initialize your Pulumi project
-2. [AWS Setup](/docs/getting-started/aws-setup) - Configure AWS permissions
-3. [Quick Start](/docs/getting-started/quick-start) - Deploy your first app
+1. [Architecture Overview](/docs/getting-started/architecture) - Understand the infrastructure
+2. [Quick Start](/docs/getting-started/quickstart) - Deploy your first app
+3. [Configuration](/docs/configuration) - Customize your deployment

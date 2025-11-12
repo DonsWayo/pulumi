@@ -1,12 +1,6 @@
 {
   "title": "Deployment",
   "pages": [
-    "index",
-    "aws-setup",
-    "production",
-    "ci-cd",
-    "monitoring",
-    "security",
-    "performance"
+    "index"
   ]
 }
